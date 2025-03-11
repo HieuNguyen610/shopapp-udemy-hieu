@@ -70,7 +70,7 @@ comment on column products.url is 'Product image url';
 drop table orders;
 
 create table orders(
-    int serial primary key ,
+    id serial primary key ,
     user_id int,
     foreign key (user_id) references users(id),
     fullname varchar(100) default '',
@@ -89,8 +89,22 @@ create table orders(
     payment_method varchar(100)
 );
 
+alter table orders add column active boolean;
+
+-- CREATE TYPE order_status AS ENUM ('pending', 'processing', 'shipped', 'delivered', 'cancelled');
+ALTER TABLE orders ALTER COLUMN status TYPE order_status USING status::text::order_status;
+
+
 create table order_details(
     id serial primary key ,
-
+    order_id int,
+    foreign key (order_id) references orders (id),
+    product_id int,
+    foreign key (product_id) references products(id),
+    number_of_products int check ( number_of_products > 0 ),
+    price float check ( price >= 0 ),
+    total_money float check(total_money >= 0),
+    color varchar(20) default ''
 );
+
 
