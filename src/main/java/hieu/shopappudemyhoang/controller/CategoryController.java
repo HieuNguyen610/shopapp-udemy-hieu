@@ -3,6 +3,7 @@ package hieu.shopappudemyhoang.controller;
 import hieu.shopappudemyhoang.entity.Category;
 import hieu.shopappudemyhoang.request.CategoryCreateRequest;
 import hieu.shopappudemyhoang.response.ApiResponse;
+import hieu.shopappudemyhoang.response.CategoryPagingResponse;
 import hieu.shopappudemyhoang.response.CategoryResponse;
 import hieu.shopappudemyhoang.service.CategoryService;
 import jakarta.validation.Valid;
@@ -21,7 +22,7 @@ public class CategoryController {
 
     @GetMapping("")
     public ResponseEntity<ApiResponse> getAllCategories() {
-        List<Category> categories = categoryService.findAll();
+        CategoryPagingResponse categories = categoryService.findAll();
         return ResponseEntity.ok(ApiResponse.builder()
                         .message("Get all categories")
                         .data(categories)
@@ -35,5 +36,15 @@ public class CategoryController {
                         .message("Add new category")
                         .data(categoryResponse)
                 .build());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse> updateCategory(@PathVariable Long id, @Valid @RequestBody CategoryCreateRequest request) {
+        CategoryResponse response = categoryService.updateCategory(id, request);
+        // Update category logic here
+        return ResponseEntity.ok(ApiResponse.builder()
+                        .message("Update category")
+                        .data(response)
+                        .build());
     }
 }
