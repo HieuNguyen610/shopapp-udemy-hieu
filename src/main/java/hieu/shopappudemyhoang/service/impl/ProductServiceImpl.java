@@ -80,6 +80,7 @@ public class ProductServiceImpl implements ProductService {
         product.setUrl(request.getUrl());
         product.setDescription(request.getDescription());
         product.setQuantity(request.getQuantity());
+        product.setActive(request.isActive());
         Product savedProduct = productRepository.save(product);
         return convertEntityToResponse(savedProduct);
     }

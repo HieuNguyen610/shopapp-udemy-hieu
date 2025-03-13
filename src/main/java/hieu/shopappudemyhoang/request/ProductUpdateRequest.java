@@ -27,6 +27,8 @@ public class ProductUpdateRequest {
 
     private String url;
 
+    private boolean active;
+
     @NotNull(message = "Category ID cannot be empty")
     @JsonProperty("category_id")
     private Long categoryId;
