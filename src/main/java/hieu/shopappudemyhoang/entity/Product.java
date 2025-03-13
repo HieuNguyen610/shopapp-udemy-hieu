@@ -29,7 +29,8 @@ public class Product {
     @ManyToOne(targetEntity = Category.class)
     @JoinColumn(name = "category_id")
     private Category category;
-    private LocalDateTime created_at;
-    private LocalDateTime updated_at;
+    private boolean active;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
 }

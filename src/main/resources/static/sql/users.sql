@@ -60,6 +60,8 @@ create table products (
     updated_at TIMESTAMP,
     foreign key (category_id) references categories(id)
 );
+UPDATE products SET active = TRUE;
+alter table products alter column active type boolean using boolean default true;
 
 comment on column products.name is 'Laptop, Mobile Phone, ...';
 comment on column products.description is 'Product description';

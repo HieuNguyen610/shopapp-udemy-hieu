@@ -5,10 +5,12 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
 @Builder
 public class ProductResponse {
     private Long id;
@@ -18,7 +20,8 @@ public class ProductResponse {
     private Float price;
     private Integer quantity;
     private String url;
-    private Long categoryId;
-    private LocalDateTime created_at;
-    private LocalDateTime updated_at;
+    private Category category;
+    private boolean active;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

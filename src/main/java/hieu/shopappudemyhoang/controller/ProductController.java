@@ -1,6 +1,7 @@
 package hieu.shopappudemyhoang.controller;
 
 import hieu.shopappudemyhoang.request.ProductCreateRequest;
+import hieu.shopappudemyhoang.request.ProductUpdateRequest;
 import hieu.shopappudemyhoang.response.ApiResponse;
 import hieu.shopappudemyhoang.response.ProductPagingResponse;
 import hieu.shopappudemyhoang.response.ProductResponse;
@@ -41,6 +42,24 @@ public class ProductController {
         return ResponseEntity.ok(ApiResponse.builder()
                         .data(response)
                         .message("Create new product")
+                .build());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductUpdateRequest request) {
+        ProductResponse response = productService.updateProduct(id, request);
+        return ResponseEntity.ok(ApiResponse.builder()
+                .data(response)
+                .message("Create new product")
+                .build());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse> deleteProduct(@PathVariable Long id) {
+        ProductResponse response = productService.deleteById(id);
+        return ResponseEntity.ok(ApiResponse.builder()
+                        .data(response)
+                        .message("Delete product with id = " + id)
                 .build());
     }
 }
