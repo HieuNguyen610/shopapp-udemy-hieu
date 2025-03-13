@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Builder
@@ -30,4 +31,6 @@ public class ProductCreateRequest {
     @NotNull(message = "Category ID cannot be empty")
     @JsonProperty("category_id")
     private Long categoryId;
+
+    private MultipartFile file;
 }
