@@ -1,9 +1,9 @@
 Create database ShopApp;
-
+drop table users;
 CREATE TABLE users (
     id SERIAL PRIMARY KEY ,
     fullname VARCHAR(100) DEFAULT '',
-    phone_name VARCHAR(10) NOT NULL ,
+    phone_number VARCHAR(10) NOT NULL ,
     address VARCHAR(200) DEFAULT '',
     password varchar(100) NOT NULL default '',
     created_at TIMESTAMP,
@@ -13,6 +13,9 @@ CREATE TABLE users (
     facebook_account_id INT DEFAULT 0,
     google_account_id INT DEFAULT 0
 );
+
+alter table users rename column phone_name to phone_number;
+
 
 CREATE TABLE tokens (
     id SERIAL PRIMARY KEY ,
@@ -45,6 +48,18 @@ create table categories(
     name varchar(100) not null default ''
 );
 
+create table roles(
+                           id serial primary key ,
+                           name varchar(100) not null default ''
+);
+
+create table users_roles (
+    user_id int ,
+    role_id int,
+    foreign key (user_id) references users(id),
+    foreign key (role_id) references roles(id)
+);
+
 comment on column categories.name is 'electronic , ...';
 
 
@@ -61,13 +76,22 @@ create table products (
     foreign key (category_id) references categories(id)
 );
 UPDATE products SET active = TRUE;
-alter table products alter column active type boolean using boolean default true;
 
 comment on column products.name is 'Laptop, Mobile Phone, ...';
 comment on column products.description is 'Product description';
 comment on column products.price is 'Product price';
 comment on column products.quantity is 'Product quantity';
 comment on column products.url is 'Product image url';
+
+drop  table product_images;
+
+create table product_images (
+    id serial primary key ,
+    product_id int,
+    foreign key (product_id) references products(id) on delete cascade,
+    image_url varchar(300)
+);
+
 
 drop table orders;
 
