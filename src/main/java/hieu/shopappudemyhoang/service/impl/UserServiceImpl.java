@@ -10,6 +10,7 @@ import hieu.shopappudemyhoang.request.UserRegisterRequest;
 import hieu.shopappudemyhoang.response.UserResponse;
 import hieu.shopappudemyhoang.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -23,6 +24,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ObjectMapper objectMapper;
     private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserResponse register(UserRegisterRequest request) {
@@ -45,7 +47,7 @@ public class UserServiceImpl implements UserService {
                 .createdAt(LocalDateTime.now())
                 .facebookAccountId(request.getFacebookAccountId())
                 .googleAccountId(request.getGoogleAccountId())
-                .password(request.getPassword())
+                .password(passwordEncoder.encode(request.getPassword()))
                 .roles(roles)
                 .build();
 
