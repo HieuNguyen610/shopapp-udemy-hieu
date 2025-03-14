@@ -2,7 +2,9 @@ package hieu.shopappudemyhoang.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hieu.shopappudemyhoang.entity.Product;
+import hieu.shopappudemyhoang.entity.ProductImage;
 import hieu.shopappudemyhoang.repository.CategoryRepository;
+import hieu.shopappudemyhoang.repository.ProductImageRepository;
 import hieu.shopappudemyhoang.repository.ProductRepository;
 import hieu.shopappudemyhoang.request.ProductCreateRequest;
 import hieu.shopappudemyhoang.request.ProductUpdateRequest;
@@ -12,10 +14,18 @@ import hieu.shopappudemyhoang.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static java.util.stream.Collectors.toList;
 
@@ -26,6 +36,7 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final ProductImageRepository productImageRepository;
 
     @Override
     public ProductPagingResponse getAllProducts() {
@@ -43,10 +54,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductResponse createProduct(ProductCreateRequest request) {
+    public ProductResponse createProduct(ProductCreateRequest request) throws IOException {
         if ( request == null) {
             return null;
         }
+        String imageUrl = storeFile(request.getFile());
+
         Optional<Product> productOptional = productRepository.findByName(request.getName());
         if (productOptional.isPresent()) {
             throw new IllegalArgumentException("Product name = " + request.getName() + " already existed");
@@ -61,8 +74,14 @@ public class ProductServiceImpl implements ProductService {
                 .active(Boolean.TRUE)
                 .category(categoryRepository.findById(request.getCategoryId()).orElseThrow(()-> new IllegalArgumentException("Category id not exist")))
                 .build();
-
         Product savedProduct = productRepository.save(product);
+
+        ProductImage productImage = ProductImage.builder()
+                .imageUrl(imageUrl)
+                .product(savedProduct)
+                .build();
+        productImageRepository.save(productImage);
+
         return convertEntityToResponse(savedProduct);
     }
 
@@ -110,5 +129,29 @@ public class ProductServiceImpl implements ProductService {
         return entities.stream()
                .map(this::convertEntityToResponse)
                .collect(toList());
+    }
+
+    private String storeFile(MultipartFile file) throws IOException {
+        if (file != null) {
+            if (file.getSize() > 10 * 1024 * 1024) {
+                throw new IllegalArgumentException("File is larger than 10MB");
+            }
+            String contentType = file.getContentType();
+            if (contentType == null || !contentType.startsWith("image/")) {
+                throw new  IllegalArgumentException("File must be an image");
+            }
+
+            String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+            String uniqueFileName = UUID.randomUUID().toString() + "_" + fileName;
+            Path uploadDir = Paths.get("uploads");
+            if (!Files.exists(uploadDir)) {
+                Files.createDirectories(uploadDir);
+            }
+
+            Path destination = Paths.get(uploadDir.toString(), uniqueFileName);
+            Files.copy(file.getInputStream(), destination, StandardCopyOption.REPLACE_EXISTING);
+            return uniqueFileName;
+        }
+        return null;
     }
 }

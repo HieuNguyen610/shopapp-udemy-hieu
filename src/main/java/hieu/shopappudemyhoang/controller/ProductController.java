@@ -49,7 +49,7 @@ public class ProductController {
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse> createProduct(@Valid @ModelAttribute ProductCreateRequest request) throws IOException {
 
-        storeFile(request.getFile());
+//        storeFile(request.getFile());
         ProductResponse response = productService.createProduct(request);
         return ResponseEntity.ok(ApiResponse.builder()
                         .data(response)
@@ -62,7 +62,7 @@ public class ProductController {
             @PathVariable Long id,
             @Valid @ModelAttribute  ProductUpdateRequest request) throws IOException {
 
-        storeFile(request.getFile());
+//        storeFile(request.getFile());
 
         ProductResponse response = productService.updateProduct(id, request);
         return ResponseEntity.ok(ApiResponse.builder()
