@@ -7,6 +7,7 @@ import hieu.shopappudemyhoang.repository.RoleRepository;
 import hieu.shopappudemyhoang.repository.UserRepository;
 import hieu.shopappudemyhoang.request.UserLoginRequest;
 import hieu.shopappudemyhoang.request.UserRegisterRequest;
+import hieu.shopappudemyhoang.response.UserLoginResponse;
 import hieu.shopappudemyhoang.response.UserResponse;
 import hieu.shopappudemyhoang.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -56,8 +57,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse login(UserLoginRequest request) {
-        return UserResponse.builder().build();
+    public UserLoginResponse login(UserLoginRequest request) {
+        if (request == null) {
+            throw new IllegalArgumentException("Invalid login request");
+        }
+
+        User user = userRepository.findByPhoneNumber(request.getPhoneNumber())
+                .orElseThrow(()-> new IllegalStateException("User with provided phone number not found"));
+
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new IllegalStateException("Invalid password");
+        }
+
+
+        return UserLoginResponse.builder()
+                .build();
     }
 
     private User convertRequestToEntity(UserRegisterRequest request) {
