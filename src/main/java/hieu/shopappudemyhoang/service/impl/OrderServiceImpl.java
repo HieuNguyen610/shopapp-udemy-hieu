@@ -5,13 +5,16 @@ import hieu.shopappudemyhoang.entity.Order;
 import hieu.shopappudemyhoang.repository.OrderRepository;
 import hieu.shopappudemyhoang.repository.UserRepository;
 import hieu.shopappudemyhoang.request.OrderCreateRequest;
+import hieu.shopappudemyhoang.response.OrderPagingResponse;
 import hieu.shopappudemyhoang.response.OrderResponse;
 import hieu.shopappudemyhoang.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +32,24 @@ public class OrderServiceImpl implements OrderService {
 
         Order savedOrder = orderRepository.save(order);
         return convertEntityToResponse(savedOrder);
+    }
+
+    @Override
+    public OrderPagingResponse getOrderByUserId(Long userId) {
+        int count = orderRepository.countOrderByUserId(userId);
+        List<Order> orders = orderRepository.findOrdersByUserId(userId);
+
+        OrderPagingResponse response = OrderPagingResponse.builder()
+                .count(count)
+                .orders(convertEntitiesToResponses(orders))
+                .build();
+        return response;
+    }
+
+    private List<OrderResponse> convertEntitiesToResponses(List<Order> orders) {
+        return orders.stream()
+               .map(this::convertEntityToResponse)
+               .collect(Collectors.toList());
     }
 
     private OrderResponse convertEntityToResponse(Order entity) {
