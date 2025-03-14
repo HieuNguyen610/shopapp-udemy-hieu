@@ -39,10 +39,10 @@ public class Order {
     private String phone;
 
     @Column(name = "address", length = 200, nullable = false, columnDefinition = "VARCHAR(200) DEFAULT ''")
-    private String address = "";
+    private String address;
 
-    @Column(name = "note", length = 100, columnDefinition = "VARCHAR(100) DEFAULT ''")
-    private String note = "";
+    @Column(name = "note", length = 1000, columnDefinition = "VARCHAR(1000) DEFAULT ''")
+    private String note;
 
     @Column(name = "order_date")
     @JsonProperty("order_date")
