@@ -2,8 +2,6 @@ package hieu.shopappudemyhoang.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import hieu.shopappudemyhoang.entity.OrderStatus;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -21,6 +19,7 @@ public class OrderCreateRequest {
     private Long userId;
 
     @NotBlank(message = "Full name is required")
+    @JsonProperty("fullname")
     private String fullName;
 
     @NotBlank(message = "Email is required")

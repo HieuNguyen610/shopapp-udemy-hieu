@@ -29,10 +29,11 @@ public class Order {
     private User user;
 
     @Column(name = "fullname", length = 100, nullable = false, columnDefinition = "VARCHAR(100) DEFAULT ''")
-    private String fullName = "";
+    @JsonProperty("fullname")
+    private String fullName;
 
     @Column(name = "email", length = 100, nullable = false, columnDefinition = "VARCHAR(100) DEFAULT ''")
-    private String email = "";
+    private String email;
 
     @Column(name = "phone", length = 20, nullable = false)
     private String phone;
@@ -44,27 +45,34 @@ public class Order {
     private String note = "";
 
     @Column(name = "order_date")
+    @JsonProperty("order_date")
     private LocalDateTime orderDate;
 
     @Column(name = "updated_at")
+    @JsonProperty("updated_at")
     private LocalDateTime updatedAt;
 
     @Enumerated(EnumType.STRING) // Map enum as String in DB
     private OrderStatus status;
 
     @Column(name = "total_money", nullable = false)
+    @JsonProperty("total_money")
     private Float totalMoney;
 
     @Column(name = "shipping_method", length = 100)
+    @JsonProperty("shipping_method")
     private String shippingMethod;
 
     @Column(name = "shipping_address", length = 200)
+    @JsonProperty("shipping_address")
     private String shippingAddress;
 
     @Column(name = "shipping_date")
+    @JsonProperty("shipping_date")
     private LocalDateTime shippingDate;
 
     @Column(name = "tracking_number", length = 100)
+    @JsonProperty("tracking_number")
     private String trackingNumber;
 
     @Column(name = "payment_method", length = 100)
