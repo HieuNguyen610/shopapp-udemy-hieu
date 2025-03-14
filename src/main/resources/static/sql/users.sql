@@ -119,6 +119,7 @@ alter table orders add column active boolean;
 
 -- CREATE TYPE order_status AS ENUM ('pending', 'processing', 'shipped', 'delivered', 'cancelled');
 ALTER TABLE orders ALTER COLUMN status TYPE order_status USING status::text::order_status;
+ALTER table orders alter column status type varchar;
 
 
 create table order_details(
