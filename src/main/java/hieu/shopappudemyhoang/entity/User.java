@@ -18,21 +18,22 @@ import java.util.List;
 @Getter
 @Setter
 @Entity(name = "users")
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class User extends BaseEntity{
 
     @Column(name = "fullname")
     private String fullName;
 
+    @Column(name = "phone_number")
     private String phoneNumber;
 
+    @Column(name = "address", length = 200)
     private String address;
+
+    @Column(name = "password", length = 100)
     private String password;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+
     private boolean isActive;
+
     private LocalDate dateOfBirth;
 
     private int facebookAccountId;

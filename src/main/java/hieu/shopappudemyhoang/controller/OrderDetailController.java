@@ -2,14 +2,14 @@ package hieu.shopappudemyhoang.controller;
 
 import hieu.shopappudemyhoang.request.OrderDetailCreateRequest;
 import hieu.shopappudemyhoang.response.ApiResponse;
+import hieu.shopappudemyhoang.response.OrderDetailPagingResponse;
 import hieu.shopappudemyhoang.response.OrderDetailResponse;
 import hieu.shopappudemyhoang.service.OrderDetailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,6 +25,16 @@ public class OrderDetailController {
         return ResponseEntity.ok(ApiResponse.builder()
                         .data(response)
                         .message("Create order detail successfully")
+                .build());
+    }
+
+    @GetMapping("/order/{orderId}")
+    public ResponseEntity<ApiResponse> getAllOrderDetailsByOrderId(@PathVariable Long orderId) {
+        OrderDetailPagingResponse response = orderDetailService.getAllOrderDetailsByOrderId(orderId);
+
+        return ResponseEntity.ok(ApiResponse.builder()
+                        .data(response)
+                        .message("Get all order details by order ID successfully")
                 .build());
     }
 }
