@@ -1,6 +1,5 @@
 package hieu.shopappudemyhoang.response;
 
-import hieu.shopappudemyhoang.entity.Role;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -9,5 +8,5 @@ import java.util.List;
 @Builder
 public class RolePagingResponse {
     private int count;
-    private List<Role> roles;
+    private List<RoleResponse> roles;
 }

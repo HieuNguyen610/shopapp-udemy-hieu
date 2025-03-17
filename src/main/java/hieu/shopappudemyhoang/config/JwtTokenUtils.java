@@ -11,6 +11,7 @@ import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -44,7 +45,7 @@ public class JwtTokenUtils {
         claims.put("phoneNumber", user.getPhoneNumber());
         claims.put("name", user.getFullName());
         claims.put("dob", dobStr);
-        claims.put("role", user.getRoles().stream().map(Role::getName).collect(Collectors.toList()));
+        claims.put("role", user.getAuthorities());
 
         return Jwts.builder()
                .claims(claims)
@@ -78,5 +79,10 @@ public class JwtTokenUtils {
     public boolean isTokenExpired(String token) {
         Date expirationDate = this.extractClaim(token, Claims::getExpiration);
         return expirationDate.before(new Date());
+    }
+
+    public boolean validateToken(String token, UserDetails existingUser) {
+        final String phone = this.extractClaim(token, Claims::getSubject);
+        return (phone.equals(existingUser.getUsername()) &&!isTokenExpired(token));
     }
 }

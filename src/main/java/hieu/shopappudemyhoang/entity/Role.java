@@ -1,5 +1,6 @@
 package hieu.shopappudemyhoang.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,5 +27,6 @@ public class Role {
             CascadeType.MERGE
     }, fetch = FetchType.EAGER,
             mappedBy = "roles")
+    @JsonBackReference
     private List<User> users;
 }

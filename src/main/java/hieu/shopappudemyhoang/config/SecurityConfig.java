@@ -24,11 +24,12 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService() {
         return phoneNumber -> {
             User user = userRepository.findByPhoneNumber(phoneNumber).orElseThrow(()-> new IllegalArgumentException("User with phone number " + phoneNumber + " not found"));
-            return new org.springframework.security.core.userdetails.User
+            org.springframework.security.core.userdetails.User userDetails =  new org.springframework.security.core.userdetails.User
                     (user.getPhoneNumber(), // username
                      user.getPassword(),    // password
-                     user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName())).toList()
+                     user.getAuthorities()
                     );
+            return userDetails;
         };
     }
 

@@ -1,6 +1,8 @@
 package hieu.shopappudemyhoang.config;
 
 import hieu.shopappudemyhoang.response.ApiResponse;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.MalformedJwtException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,6 +16,14 @@ public class ControllerAdvice {
         return ResponseEntity.badRequest().body(ApiResponse.builder()
                         .message(e.getMessage())
                         .data(e.getClass())
+                .build());
+    }
+
+    @ExceptionHandler(MalformedJwtException.class)
+    public ResponseEntity<ApiResponse> handleJwtException(MalformedJwtException e) {
+        return ResponseEntity.badRequest().body(ApiResponse.builder()
+                .message(e.getMessage())
+                .data(e.getClass())
                 .build());
     }
 

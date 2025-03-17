@@ -1,6 +1,5 @@
 package hieu.shopappudemyhoang.controller;
 
-import hieu.shopappudemyhoang.entity.Category;
 import hieu.shopappudemyhoang.request.CategoryCreateRequest;
 import hieu.shopappudemyhoang.response.ApiResponse;
 import hieu.shopappudemyhoang.response.CategoryPagingResponse;
@@ -11,8 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/categories")
@@ -20,7 +17,7 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
-    @GetMapping("")
+    @GetMapping("/all")
     public ResponseEntity<ApiResponse> getAllCategories() {
         CategoryPagingResponse categories = categoryService.findAll();
         return ResponseEntity.ok(ApiResponse.builder()

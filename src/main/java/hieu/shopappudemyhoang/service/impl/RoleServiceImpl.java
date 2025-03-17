@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +28,7 @@ public class RoleServiceImpl implements RoleService {
         int count = (int) roleRepository.count();
         return RolePagingResponse.builder()
                 .count(count)
-                .roles(roles)
+                .roles(convertEntitiesToResponses(roles))
                 .build();
     }
 
@@ -73,5 +74,11 @@ public class RoleServiceImpl implements RoleService {
 
     private RoleResponse convertEntityToResponse(Role entity) {
         return objectMapper.convertValue(entity, RoleResponse.class);
+    }
+
+    private List<RoleResponse> convertEntitiesToResponses(List<Role> entities) {
+        return entities.stream()
+               .map(this::convertEntityToResponse)
+               .collect(Collectors.toList());
     }
 }
