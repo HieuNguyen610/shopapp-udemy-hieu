@@ -1,5 +1,6 @@
 package hieu.shopappudemyhoang.config;
 
+import hieu.shopappudemyhoang.entity.Role;
 import hieu.shopappudemyhoang.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -13,9 +14,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -33,28 +37,46 @@ public class JwtTokenUtils {
             throw new IllegalArgumentException("User must not be null");
         }
 
+        String dobStr = user.getDateOfBirth().format(DateTimeFormatter.ISO_LOCAL_DATE);
+
         log.info("Generate token for user phone = " + user.getPhoneNumber());
         Map<String, Object> claims = new HashMap<>();
         claims.put("phoneNumber", user.getPhoneNumber());
+        claims.put("name", user.getFullName());
+        claims.put("dob", dobStr);
+        claims.put("role", user.getRoles().stream().map(Role::getName).collect(Collectors.toList()));
 
         return Jwts.builder()
-               .setClaims(claims)
-               .setSubject(user.getPhoneNumber())
-               .setExpiration(new Date(System.currentTimeMillis() + expirationMilliseconds))
-               .signWith(getSignInKey(), SignatureAlgorithm.ES256)
+               .claims(claims)
+               .subject(user.getPhoneNumber())
+               .expiration(new Date(System.currentTimeMillis() + expirationMilliseconds))
+               .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                .compact();
     }
+
+
 
     private Key getSignInKey() {
         byte[] bytes = Decoders.BASE64URL.decode(secretKey);
         return Keys.hmacShaKeyFor(bytes);
     }
 
-    public Claims extractClaims(String token) {
+    private Claims extractClaims(String token) {
         return Jwts.parser()
                .setSigningKey(getSignInKey())
                .build()
                .parseClaimsJws(token)
                .getBody();
+    }
+
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = this.extractClaims(token);
+        return claimsResolver.apply(claims);
+    }
+
+    // check expiration
+    public boolean isTokenExpired(String token) {
+        Date expirationDate = this.extractClaim(token, Claims::getExpiration);
+        return expirationDate.before(new Date());
     }
 }

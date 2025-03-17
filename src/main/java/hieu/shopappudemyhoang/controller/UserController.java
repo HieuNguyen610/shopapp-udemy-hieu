@@ -3,6 +3,7 @@ package hieu.shopappudemyhoang.controller;
 import hieu.shopappudemyhoang.request.UserLoginRequest;
 import hieu.shopappudemyhoang.request.UserRegisterRequest;
 import hieu.shopappudemyhoang.response.ApiResponse;
+import hieu.shopappudemyhoang.response.UserLoginResponse;
 import hieu.shopappudemyhoang.response.UserResponse;
 import hieu.shopappudemyhoang.service.UserService;
 import jakarta.validation.Valid;
@@ -33,7 +34,7 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponse> login(@Valid @RequestBody UserLoginRequest request) {
-        UserResponse response = userService.login(request);
+        UserLoginResponse response = userService.login(request);
         return ResponseEntity.ok(ApiResponse.builder()
                 .data(response)
                 .message("Login user")

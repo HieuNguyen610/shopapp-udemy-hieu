@@ -1,6 +1,7 @@
 package hieu.shopappudemyhoang.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hieu.shopappudemyhoang.config.JwtTokenUtils;
 import hieu.shopappudemyhoang.entity.Role;
 import hieu.shopappudemyhoang.entity.User;
 import hieu.shopappudemyhoang.repository.RoleRepository;
@@ -26,6 +27,7 @@ public class UserServiceImpl implements UserService {
     private final ObjectMapper objectMapper;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtTokenUtils jwtTokenUtils;
 
     @Override
     public UserResponse register(UserRegisterRequest request) {
@@ -69,8 +71,8 @@ public class UserServiceImpl implements UserService {
             throw new IllegalStateException("Invalid password");
         }
 
-
         return UserLoginResponse.builder()
+                .token(jwtTokenUtils.generateToken(user))
                 .build();
     }
 
