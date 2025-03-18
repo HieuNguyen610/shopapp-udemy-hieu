@@ -1,6 +1,8 @@
 package hieu.shopappudemyhoang.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,8 +27,9 @@ public class Role {
     @ManyToMany(cascade = {
             CascadeType.PERSIST,
             CascadeType.MERGE
-    }, fetch = FetchType.EAGER,
+    }, fetch = FetchType.LAZY,
             mappedBy = "roles")
-    @JsonBackReference
+    @JsonManagedReference
+    @JsonIgnore
     private List<User> users;
 }

@@ -1,7 +1,5 @@
 package hieu.shopappudemyhoang.response;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import hieu.shopappudemyhoang.entity.Role;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,6 +33,6 @@ public class UserResponse {
 
     private int googleAccountId;
 
-    private List<Role> roles;
+    private List<RoleResponse> roles;
 
 }

@@ -1,6 +1,6 @@
 package hieu.shopappudemyhoang.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,7 +15,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -55,7 +54,7 @@ public class User extends BaseEntity implements UserDetails {
                     name = "role_id", referencedColumnName = "id"
             )
     )
-    @JsonManagedReference
+    @JsonBackReference
     private List<Role> roles;
 
     @Override

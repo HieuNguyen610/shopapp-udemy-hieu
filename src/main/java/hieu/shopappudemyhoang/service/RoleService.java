@@ -3,7 +3,6 @@ package hieu.shopappudemyhoang.service;
 import hieu.shopappudemyhoang.request.RoleCreateRequest;
 import hieu.shopappudemyhoang.response.RolePagingResponse;
 import hieu.shopappudemyhoang.response.RoleResponse;
-import jakarta.validation.Valid;
 
 public interface RoleService {
     RolePagingResponse findAll();

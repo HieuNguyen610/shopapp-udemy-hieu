@@ -10,7 +10,9 @@ import hieu.shopappudemyhoang.request.UserLoginRequest;
 import hieu.shopappudemyhoang.request.UserRegisterRequest;
 import hieu.shopappudemyhoang.response.UserLoginResponse;
 import hieu.shopappudemyhoang.response.UserResponse;
+import hieu.shopappudemyhoang.service.RoleService;
 import hieu.shopappudemyhoang.service.UserService;
+import hieu.shopappudemyhoang.utils.EntityConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -31,6 +33,7 @@ public class UserServiceImpl implements UserService , UserDetailsService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenUtils jwtTokenUtils;
+    private final EntityConverter entityConverter;
 
     @Override
     public UserResponse register(UserRegisterRequest request) {
@@ -84,7 +87,9 @@ public class UserServiceImpl implements UserService , UserDetailsService {
     }
 
     private UserResponse convertEntityToResponse(User entity) {
-        return objectMapper.convertValue(entity, UserResponse.class);
+        UserResponse response = objectMapper.convertValue(entity, UserResponse.class);
+        response.setRoles(entityConverter.convertRolesEntityToResponses(entity.getRoles()));
+        return response;
     }
 
     private User findByPhoneNumber(String phoneNumber) {
