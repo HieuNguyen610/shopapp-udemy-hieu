@@ -19,7 +19,6 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
@@ -29,6 +28,14 @@ public class WebSecurityConfig {
                             .requestMatchers("/error").permitAll()
                             .anyRequest().authenticated();
                 })
+                .exceptionHandling(handling -> handling
+                    .accessDeniedHandler((request, response, accessDeniedException) -> {
+                        // Log the denied access details
+                        System.out.println("Access Denied: " + accessDeniedException.getMessage());
+                        System.out.println("User: " + request.getUserPrincipal());
+                        // You can add more logging here
+                    })
+                )
                 .build();
     }
 }

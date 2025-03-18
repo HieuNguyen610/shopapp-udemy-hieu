@@ -12,6 +12,9 @@ import hieu.shopappudemyhoang.response.UserLoginResponse;
 import hieu.shopappudemyhoang.response.UserResponse;
 import hieu.shopappudemyhoang.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +24,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService , UserDetailsService {
 
     private final UserRepository userRepository;
     private final ObjectMapper objectMapper;
@@ -86,5 +89,10 @@ public class UserServiceImpl implements UserService {
 
     private User findByPhoneNumber(String phoneNumber) {
         return userRepository.findByPhoneNumber(phoneNumber).orElseThrow(()-> new IllegalArgumentException("User with provided phone number not found"));
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String phoneNumber) throws UsernameNotFoundException {
+        return findByPhoneNumber(phoneNumber);
     }
 }

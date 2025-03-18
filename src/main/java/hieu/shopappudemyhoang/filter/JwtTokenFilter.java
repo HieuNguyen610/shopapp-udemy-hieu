@@ -1,6 +1,8 @@
 package hieu.shopappudemyhoang.filter;
 
 import hieu.shopappudemyhoang.config.JwtTokenUtils;
+import hieu.shopappudemyhoang.entity.User;
+import hieu.shopappudemyhoang.service.UserService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -24,7 +26,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JwtTokenFilter extends OncePerRequestFilter {
 
-    private final UserDetailsService userDetailsService;
+    private final UserService userService;
     private final JwtTokenUtils jwtTokenUtils;
 
     @Override
@@ -41,8 +43,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 final String token = authHeader.substring(7);
                 final String phone = extractPhoneNumber(token);
                 if (phone != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                    UserDetails userDetails = userDetailsService.loadUserByUsername(phone);
+                     User userDetails = (User) userService.loadUserByUsername(phone);
                     if (jwtTokenUtils.validateToken(token, userDetails)) {
+
                         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                                 userDetails, null, userDetails.getAuthorities());
                         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
